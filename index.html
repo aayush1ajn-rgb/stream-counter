@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Stream Counter</title>
+
     <style>
         body {
             margin: 0;
@@ -23,8 +24,42 @@
 
 <body>
     <div class="counter">
-        <div>WINS: 0</div>
-        <div>LOSSES: 0</div>
+        <div>WINS: <span id="wins">0</span></div>
+        <div>LOSSES: <span id="losses">0</span></div>
     </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js";
+        import {
+            getDatabase,
+            ref,
+            onValue
+        } from "https://www.gstatic.com/firebasejs/12.17.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCVaMI6Ko7FqckRK7TMQ578cVaHyQHV5DA",
+            authDomain: "stream-counter-4b751.firebaseapp.com",
+            databaseURL: "https://stream-counter-4b751-default-rtdb.firebaseio.com",
+            projectId: "stream-counter-4b751",
+            storageBucket: "stream-counter-4b751.firebasestorage.app",
+            messagingSenderId: "882850513261",
+            appId: "1:882850513261:web:95bf244dbaac1f3540da64",
+            measurementId: "G-5D71WEPPXJ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        const counterRef = ref(database, "counter");
+
+        onValue(counterRef, (snapshot) => {
+            const data = snapshot.val();
+
+            if (data) {
+                document.getElementById("wins").textContent = data.wins ?? 0;
+                document.getElementById("losses").textContent = data.losses ?? 0;
+            }
+        });
+    </script>
 </body>
 </html>
